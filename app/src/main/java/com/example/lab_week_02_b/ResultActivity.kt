@@ -1,9 +1,9 @@
 package com.example.lab_week_02_b
 
-import android.app.Activity
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
+import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -18,22 +18,26 @@ class ResultActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_result)
 
+        val backButton = findViewById<Button>(R.id.back_button)
+        backButton.setOnClickListener {
+            finish()
+        }
+
         if (intent != null) {
             val colorCode = intent.getStringExtra(COLOR_KEY)
             val backgroundScreen = findViewById<ConstraintLayout>(R.id.background_screen)
             val resultMessage = findViewById<TextView>(R.id.color_code_result_message)
 
             try {
-                // Coba set warna background
+                // Pakai Color.parseColor() - aman & tidak butuh dependency tambahan
                 backgroundScreen.setBackgroundColor(Color.parseColor("#$colorCode"))
                 resultMessage.text = getString(R.string.color_code_result_message, colorCode?.uppercase())
-            } catch (ex: IllegalArgumentException) {
-                // Jika kode warna salah → kirim error balik ke MainActivity
+            } catch (_: IllegalArgumentException) {
                 val errorIntent = Intent().apply {
                     putExtra(ERROR_KEY, true)
                 }
-                setResult(Activity.RESULT_OK, errorIntent)
-                finish() // Tutup activity ini
+                setResult(RESULT_OK, errorIntent)
+                finish()
             }
         }
     }
